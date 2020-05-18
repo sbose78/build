@@ -2,7 +2,8 @@
 title: buildstrategy
 authors:
   - "@sbose78"
-status: implementable
+  - "@qu1queee"
+status: design
 ---
 
 # The BuildStrategy API
