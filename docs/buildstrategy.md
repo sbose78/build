@@ -1,48 +1,38 @@
-## The BuildStrategy API
-
 ---
-title: helm-charts-in-developer-catalog
+title: buildstrategy
 authors:
   - "@sbose78"
-  - "@pedjak"
-reviewers:
-  - TBD
-approvers:
-  - "@deads2k"
-  - "@spadgett"
-  - "@bparees"
-  - "@derekwaynecarr"
-creation-date: 2020-01-09
-last-updated: 2020-04-15
 status: implementable
 ---
 
+# The BuildStrategy API
 
-### Goals of the BuildStrategy API
 
-#### User-defined build strategies
+## Goals
+
+### User-defined build strategies
 
 Users and enterprises have strong opinions on how to build container images from source code. 
 This project aims to enable admins to define build strategies for building container images in a Kubernetes cluster.
 
-#### Accomplish more by specifying less!
+### Accomplish more by specifying less!
 
 A slim BuildStrategy is one where the BuildStrategy author gets to accomplish more by specifying less. Without doing so,
 we would be making it hard to define BuildStrategies, thereby undermining the very premise of simplicity that this project 
 aims to provide with the BuildStrategy CRD. For example, the author of the build strategy should not have to specify how to push images to 
 remote registries.
 
-#### Simplicity
+### Simplicity
 
 This project uses the `TaskRun` API under-the-hood to execute an image build without leaking abstraction. The complexity of defining
 a BuildStrategy must be less than that of defining a Tekton `Task`.
 
-### Defining a BuildStrategy
+## Defining a BuildStrategy
 
 A BuildStrategy CR is defined as a list of [corev1.Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#container-v1-core)
 execution steps.
 
-#### What must be specified
+### What must be specified
 
 
 The author of the BuildStrategy CR may thereby specify the command(s) that need to be executed inside a container to convert source code
@@ -54,7 +44,7 @@ As an example, the build author might wish to express the following commands as 
 * analyzer - restores launch layer metadata from the previous build
 * builder - executes buildpacks (via /bin/build)
 
-#### What need not be specified
+### What need not be specified
 
 The Build controller should take care of executing build steps common to all strategies without making it mandatory
 for users to specify 'well-known' steps. 
@@ -70,7 +60,7 @@ The BuildStrategy author need not necessarily specify:
 From an implementation perspective, well-known `BuildStrategy` steps are `Tekton` `Task` steps that are dynamically generated 
 on-the-fly.
 
-#### Optional overrides
+### Optional overrides
  
 If the BuildStrategy author wishes to be explicit about the "how" of pushing an image to registry, she should be able
 express that. 
