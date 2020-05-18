@@ -74,3 +74,14 @@ The BuildStrategy author could convey the same to the controller by annotating t
  buildrun.build.dev/contains-runtime-image: true
  ```
 
+### Pararmeterization
+
+Attributes from the `Build` CR could be used as parameters while definding a `BuildStrategy`.
+
+Examples:
+
+* `$(build.output.image)` implies that the `Build` CR's `spec.output.image` value be used.
+
+* `$(build.parameters.skip_ssl_verify)` implies that the value corresponding to key `skip_ssl_verify` in `Build` CR's `spec.parameters` be used.
+
+
