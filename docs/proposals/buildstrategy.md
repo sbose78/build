@@ -18,15 +18,18 @@ This project aims to enable admins to define build strategies for building conta
 
 ### Accomplish more by specifying less!
 
-A slim BuildStrategy is one where the BuildStrategy author gets to accomplish more by specifying less. Without doing so,
-we would be making it hard to define BuildStrategies, thereby undermining the very premise of simplicity that this project 
-aims to provide with the BuildStrategy CRD. For example, the author of the build strategy should not have to specify how to push images to 
+A slim BuildStrategy is one where the BuildStrategy author gets to accomplish more by specifying less. Without enabling authors to do so,
+we would be inadvertently making it hard to define BuildStrategies, thereby undermining the very premise of simplicity that this project 
+aims to provide with the BuildStrategy CRD. 
+
+For example, the author of the build strategy should not have to specify how to push images to 
 remote registries.
 
 ### Simplicity
 
 This project uses the `TaskRun` API under-the-hood to execute an image build without leaking abstraction. The complexity of defining
-a BuildStrategy must be less than that of defining a Tekton `Task`.
+a BuildStrategy must be less than that of defining a Tekton `Task`. 
+
 
 ## Defining a BuildStrategy
 
@@ -63,7 +66,7 @@ on-the-fly.
 
 ### Optional overrides
  
-If the BuildStrategy author wishes to be explicit about the "how" of pushing an image to registry, she should be able
+If the BuildStrategy author wishes to be explicit about the "how" of pushing an image to registry, the author should be able
 express that. 
 
 The BuildStrategy author could convey the same to the controller by annotating the `BuildStrategy`
@@ -74,7 +77,7 @@ The BuildStrategy author could convey the same to the controller by annotating t
  buildrun.build.dev/contains-runtime-image: true
  ```
 
-### Pararmeterization
+### Parameterization
 
 Attributes from the `Build` CR could be used as parameters while definding a `BuildStrategy`.
 
@@ -85,3 +88,14 @@ Examples:
 * `$(build.parameters.skip_ssl_verify)` implies that the value corresponding to key `skip_ssl_verify` in `Build` CR's `spec.parameters` be used.
 
 
+### Consequences
+
+At the time of writing this proposal, we've already had `BuildStrategies` defined in `/samples` where the `BuildStrategy` author has expressed [corev1.Container](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/) steps to build images and push them to a registry.
+
+Here's what it means to adopt this proposal: 
+
+1. Explore the possibility of removing the image push step in all `BuildStrategies`.  
+
+2. Explore the possibility of generating lean runtime images if the user provides the runtime base image information in the `Build` CR.
+
+3. If the above experiments succeed, ensure that **Optional overrides** as stated in the previous section, are supported.
